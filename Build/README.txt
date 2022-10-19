@@ -1,0 +1,2 @@
+Generated recipes will be placed in this folder. Please note that by default their namespace is "create_innovations"
+and the datapack they are in will have to hold the recipes under that name. This can be configured via "set_namespace()".

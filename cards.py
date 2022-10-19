@@ -7,6 +7,12 @@ def make_products():
 
 def make_professions():
     profession_card("Farming", 0xFFCC29, 0x81B214)
+    profession_card("Carpentry", 0xD0AF84, 0x966C3B)
+    profession_card("Mining", 0x1C1124, 0x88FFF7)
+    profession_card("Masonry", 0x5E6F64, 0xBA7967)
+    profession_card("Hunting", 0x393E46, 0xCF0000)
+    profession_card("Cooking", 0xD8B384, 0xF7DAD9)
+    profession_card("Smithing", 0xFFC93C, 0xFF7A00)
 
 
 def make_trades():
