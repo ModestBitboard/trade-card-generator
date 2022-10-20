@@ -5,7 +5,6 @@ import os
 import json
 from re import sub
 from colorama import Fore, Style
-import cards
 from Ids import *
 
 doInfo = True
@@ -37,7 +36,7 @@ def alert(msg):
 
 # Variables
 
-PROFESSIONS = dict()
+PROFESSIONS = {}
 
 STONECUTTING = {
     "type": MC("stonecutting"),
