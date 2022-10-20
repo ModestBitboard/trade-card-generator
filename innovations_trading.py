@@ -165,7 +165,7 @@ def profession_recipe(
     if profession not in PROFESSIONS.values():
         PROFESSIONS[snake_case(profession)] = list()
 
-    trading_name = snake_case(recipe_name) + "_trading"
+    trading_name = "%s_%s_trading" % (snake_case(recipe_name), snake_case(profession))
 
     trading_recipe = TRADING
 
