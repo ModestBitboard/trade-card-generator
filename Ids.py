@@ -54,7 +54,7 @@ def BOP(object_id: str):
 
 
 def PR_C(object_id: str):
-    """Project Red"""
+    """Project Red: Core"""
     return "projectred-core:" + object_id
 
 
@@ -81,6 +81,36 @@ def F(object_id: str):
 def AC(object_id: str):
     """Aquaculture"""
     return "aquaculture:" + object_id
+
+
+def OC(object_id: str):
+    """Occultism"""
+    return "occultism:" + object_id
+
+
+def IE(object_id: str):
+    """Immersive Engineering"""
+    return "immersive_engineering:" + object_id
+
+
+def SC(object_id: str):
+    """SecurityCraft"""
+    return "securitycraft:" + object_id
+
+
+def CC(object_id: str):
+    """CC: Tweaked"""
+    return "computercraft:" + object_id
+
+
+def CA(object_id: str):
+    """Create: Crafts & Additions"""
+    return "createaddition:" + object_id
+
+
+def CD(object_id: str):
+    """Create: Deco"""
+    return "createdeco:" + object_id
 
 
 def CI(object_id: str):

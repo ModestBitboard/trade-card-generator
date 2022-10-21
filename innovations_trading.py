@@ -17,7 +17,9 @@ def snake_case(msg):
         sub('([A-Z][a-z]+)', r' \1',
             sub('([A-Z]+)', r' \1',
                 msg.replace('-', ' ')
-                .replace("'", "").replace("!", "")
+                .replace("'", "")
+                .replace("!", "")
+                .replace(":", "")
                 )).split()).lower()
 
 
@@ -37,6 +39,7 @@ def alert(msg):
 # Variables
 
 PROFESSIONS = {}
+EXCHANGES = {}
 
 STONECUTTING = {
     "type": MC("stonecutting"),
@@ -52,7 +55,6 @@ TRADING = {
   "type": CI("mechanical_trading"),
   "ingredients": [
     {
-      "item": str,
       "count": int
     }
   ],
@@ -64,6 +66,8 @@ TRADING = {
 
 G = CI("gold_coin")
 S = CI("silver_coin")
+B = CI("bronze_coin")
+I = CI("invar_coin")
 
 
 # Config/Helper Functions
@@ -82,6 +86,73 @@ def CN(object_id: str):
 
 
 # Functions
+def exchange_card(
+        name: str = "Exchange Currencies",
+        small_currency: str = S,
+        big_currency: str = G,
+        color_1: hex = 0xEBA83A,
+        color_2: hex = 0xF4F4F4
+):
+    """
+    Generates exchange card recipes into the "Build" folder.
+
+    :param name: The name displayed on the card
+    :param small_currency: The id of the smaller currency
+    :param big_currency: The id of the bigger currency
+    :param color_1: The color on top of the card
+    :param color_2: The color on the bottom of the card
+    """
+
+    small_name = snake_case(name) + "_small"
+    big_name = snake_case(name) + "_big"
+    stonecutting_name = snake_case(name) + "_card"
+
+    nbt = {
+        "recipeIds": [CN("mechanical_trading/" + small_name), CN("mechanical_trading/" + big_name)],
+        "NamedAfter": name,
+        "CardColor1": "%x" % color_1,
+        "CardColor2": "%x" % color_2
+    }
+
+    stonecutting_recipe = STONECUTTING
+
+    stonecutting_recipe["ingredient"]["item"] = CI("blank_trade_card")
+    stonecutting_recipe["result"] = CI("trade_card")
+    stonecutting_recipe["nbt"] = str(nbt)
+    stonecutting_recipe["count"] = 1
+
+    with open(f"{os.path.dirname(__file__)}/Build/stonecutting/{stonecutting_name}.json", "w") as f:
+        json.dump(stonecutting_recipe, f, indent=2)
+
+    info(f"Generated file stonecutting/{stonecutting_name}.json")
+
+    small_recipe = TRADING
+
+    small_recipe["ingredients"][0]["item"] = big_currency
+    small_recipe["ingredients"][0]["count"] = 1
+    small_recipe["output"]["item"] = small_currency
+    small_recipe["output"]["count"] = 64
+
+    with open(f"{os.path.dirname(__file__)}/Build/mechanical_trading/{small_name}.json", "w") as f:
+        json.dump(small_recipe, f, indent=2)
+
+    info(f"Generated file mechanical_trading/{small_name}.json")
+
+    big_recipe = TRADING
+
+    big_recipe["ingredients"][0]["item"] = small_currency
+    big_recipe["ingredients"][0]["count"] = 64
+    big_recipe["output"]["item"] = big_currency
+    big_recipe["output"]["count"] = 1
+
+    with open(f"{os.path.dirname(__file__)}/Build/mechanical_trading/{big_name}.json", "w") as f:
+        json.dump(small_recipe, f, indent=2)
+
+    info(f"Generated file mechanical_trading/{big_name}.json")
+
+    update(f"Registered Exchange Card \"{name}\"")
+
+
 def trade_card(
         item_name: str = "Garbage",
         item_id: str = CI("garbage"),
@@ -107,7 +178,7 @@ def trade_card(
     stonecutting_name = "trade_card_"+snake_case(item_name)
 
     nbt = {
-        "recipeIds": [CN("trading/"+trading_name)],
+        "recipeIds": [CN("mechnaical_trading/"+trading_name)],
         "NamedAfter": item_name,
         "CardColor1": "%x" % color_1,
         "CardColor2": "%x" % color_2
@@ -142,33 +213,36 @@ def trade_card(
 
 def profession_recipe(
         profession: str = "Garbage Collector",
-        recipe_name: str = "garbage",
         item_id: str = CI("garbage"),
         item_amount: int = 1,
         money_id: str = S,
-        money_amount: int = 1
+        money_amount: int = 1,
+        tag: bool = False
 ):
     """
     Generates recipes for profession card trading into the "Build" folder.
 
     :param profession: The name of the profession
-    :param recipe_name: The name of the recipe
     :param item_id: The input ingredient id
     :param item_amount: The amount of the input ingredient
     :param money_id: The id for the item used as money
     :param money_amount: The amount of money outputted
+    :param tag: If true, the recipe input will require a tag instead of an item
     """
 
     global PROFESSIONS
 
     if profession not in PROFESSIONS.values():
-        PROFESSIONS[snake_case(profession)] = list()
+        PROFESSIONS[snake_case(profession)] = []
 
-    trading_name = "%s_%s_trading" % (snake_case(recipe_name), snake_case(profession))
+    trading_name = "%s_%s_trading" % (snake_case(item_id), snake_case(profession))
 
     trading_recipe = TRADING
 
-    trading_recipe["ingredients"][0]["item"] = item_id
+    if tag:
+        trading_recipe["ingredients"][0]["tag"] = item_id
+    else:
+        trading_recipe["ingredients"][0]["item"] = item_id
     trading_recipe["ingredients"][0]["count"] = item_amount
     trading_recipe["output"]["item"] = money_id
     trading_recipe["output"]["count"] = money_amount
@@ -215,4 +289,4 @@ def profession_card(
         json.dump(stonecutting_recipe, f, indent=2)
 
     info(f"Generated file stonecutting/{stonecutting_name}.json")
-    update(f"Registered Trade Card for \"{profession}\"")
+    update(f"Registered Profession Card for \"{profession}\"")
