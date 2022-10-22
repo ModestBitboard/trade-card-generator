@@ -379,13 +379,8 @@ def make_exchanges():
     # exchange_card("Exchange Private Currencies", B, I, 0x7A4318, 0x406D6C)
 
 
-def make_catalog():
-    pass
-
-
 if __name__ == '__main__':
     make_products()
     make_professions()
     make_trades()
     make_exchanges()
-    make_catalog()
