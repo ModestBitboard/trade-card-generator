@@ -25,7 +25,7 @@ def make_products():
     profession_recipe("Farming", BOP("toadstool"), 8, S, 1)
     profession_recipe("Farming", MC("kelp"), 64, S, 1)
     profession_recipe("Farming", MC("pumpkin"), 4, S, 1)
-    profession_recipe("Farming", MC("wool"), 16, S, 1, True)
+    profession_recipe("Farming", MC("wool"), 16, S, 1, True, "wool")
     profession_recipe("Farming", MC("melon"), 2, S, 1)
 
     # Carpentry
@@ -53,8 +53,8 @@ def make_products():
     profession_recipe("Mining", MC("raw_copper"), 16, S, 8)
     profession_recipe("Mining", CR("raw_zinc"), 16, S, 8)
     profession_recipe("Mining", MC("raw_gold"), 16, S, 10)
-    profession_recipe("Mining", F("raw_materials/nickel"), 16, S, 12, True)
-    profession_recipe("Mining", F("raw_materials/lead"), 16, S, 12, True)
+    profession_recipe("Mining", F("raw_materials/nickel"), 16, S, 12, True, "raw_nickel")
+    profession_recipe("Mining", F("raw_materials/lead"), 16, S, 12, True, "raw_lead")
     profession_recipe("Mining", MC("andesite"), 64, S, 1)
     profession_recipe("Mining", MC("granite"), 64, S, 1)
     profession_recipe("Mining", MC("diorite"), 64, S, 1)
@@ -91,7 +91,7 @@ def make_products():
     profession_recipe("Masonry", TC("lavawood"), 64, S, 6)
     profession_recipe("Masonry", CR("ornate_iron_window"), 64, S, 10)
     profession_recipe("Masonry", MC("mossy_cobblestone"), 64, S, 6)
-    profession_recipe("Masonry", F("glazed_terracotta"), 64, S, 6, True)
+    profession_recipe("Masonry", F("glazed_terracotta"), 64, S, 6, True, "glazed_terracotta")
     profession_recipe("Masonry", SP("daub_brace"), 64, S, 8)
 
     # Hunting
@@ -224,7 +224,7 @@ def make_products():
     profession_recipe("Smithing", MC("golden_apple"), 1, S, 10)
     profession_recipe("Smithing", MC("arrow"), 32, S, 3)
     profession_recipe("Smithing", MC("iron_sword"), 1, S, 1)
-    profession_recipe("Smithing", TC("modifiable/two_handed"), 1, S, 1, True)
+    profession_recipe("Smithing", TC("modifiable/two_handed"), 1, S, 1, True, "two_handed")
     profession_recipe("Smithing", MC("golden_sword"), 1, S, 2)
 
 

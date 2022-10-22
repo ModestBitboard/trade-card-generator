@@ -6,6 +6,8 @@ import json
 from re import sub
 from colorama import Fore, Style
 from Ids import *
+from time import sleep
+import copy
 
 doInfo = True
 namespace = "create_innovations"
@@ -19,7 +21,7 @@ def snake_case(msg):
                 msg.replace('-', ' ')
                 .replace("'", "")
                 .replace("!", "")
-                .replace(":", "")
+                .replace(":", "_")
                 )).split()).lower()
 
 
@@ -39,7 +41,6 @@ def alert(msg):
 # Variables
 
 PROFESSIONS = {}
-EXCHANGES = {}
 
 STONECUTTING = {
     "type": MC("stonecutting"),
@@ -114,7 +115,7 @@ def exchange_card(
         "CardColor2": "%x" % color_2
     }
 
-    stonecutting_recipe = STONECUTTING
+    stonecutting_recipe = copy.deepcopy(STONECUTTING)
 
     stonecutting_recipe["ingredient"]["item"] = CI("blank_trade_card")
     stonecutting_recipe["result"] = CI("trade_card")
@@ -124,9 +125,9 @@ def exchange_card(
     with open(f"{os.path.dirname(__file__)}/Build/stonecutting/{stonecutting_name}.json", "w") as f:
         json.dump(stonecutting_recipe, f, indent=2)
 
-    info(f"Generated file stonecutting/{stonecutting_name}.json")
+    alert(f"Generated file stonecutting/{stonecutting_name}.json")
 
-    small_recipe = TRADING
+    small_recipe = copy.deepcopy(TRADING)
 
     small_recipe["ingredients"][0]["item"] = big_currency
     small_recipe["ingredients"][0]["count"] = 1
@@ -138,7 +139,7 @@ def exchange_card(
 
     info(f"Generated file mechanical_trading/{small_name}.json")
 
-    big_recipe = TRADING
+    big_recipe = copy.deepcopy(TRADING)
 
     big_recipe["ingredients"][0]["item"] = small_currency
     big_recipe["ingredients"][0]["count"] = 64
@@ -151,6 +152,7 @@ def exchange_card(
     info(f"Generated file mechanical_trading/{big_name}.json")
 
     update(f"Registered Exchange Card \"{name}\"")
+    sleep(0.05)
 
 
 def trade_card(
@@ -174,17 +176,17 @@ def trade_card(
     :param color_2: The color on the bottom of the card
     """
 
-    trading_name = snake_case(item_name)+"_trading"
+    trading_name = snake_case(item_name) + "_trading"
     stonecutting_name = "trade_card_"+snake_case(item_name)
 
     nbt = {
-        "recipeIds": [CN("mechnaical_trading/"+trading_name)],
+        "recipeIds": [CN("mechanical_trading/"+trading_name)],
         "NamedAfter": item_name,
         "CardColor1": "%x" % color_1,
         "CardColor2": "%x" % color_2
     }
 
-    stonecutting_recipe = STONECUTTING
+    stonecutting_recipe = copy.deepcopy(STONECUTTING)
 
     stonecutting_recipe["ingredient"]["item"] = CI("blank_trade_card")
     stonecutting_recipe["result"] = CI("trade_card")
@@ -194,9 +196,9 @@ def trade_card(
     with open(f"{os.path.dirname(__file__)}/Build/stonecutting/{stonecutting_name}.json", "w") as f:
         json.dump(stonecutting_recipe, f, indent=2)
 
-    info(f"Generated file stonecutting/{stonecutting_name}.json")
+    alert(f"Generated file stonecutting/{stonecutting_name}.json")
 
-    trading_recipe = TRADING
+    trading_recipe = copy.deepcopy(TRADING)
 
     trading_recipe["ingredients"][0]["item"] = money_id
     trading_recipe["ingredients"][0]["count"] = money_amount
@@ -209,6 +211,7 @@ def trade_card(
     info(f"Generated file mechanical_trading/{trading_name}.json")
 
     update(f"Registered Trade Card for \"{item_name}\"")
+    sleep(0.05)
 
 
 def profession_recipe(
@@ -217,7 +220,8 @@ def profession_recipe(
         item_amount: int = 1,
         money_id: str = S,
         money_amount: int = 1,
-        tag: bool = False
+        tag: bool = False,
+        tag_name: str = "garbage",
 ):
     """
     Generates recipes for profession card trading into the "Build" folder.
@@ -228,16 +232,20 @@ def profession_recipe(
     :param money_id: The id for the item used as money
     :param money_amount: The amount of money outputted
     :param tag: If true, the recipe input will require a tag instead of an item
+    :param tag_name: If tag is enabled, this parameter will required for the file name
     """
 
     global PROFESSIONS
 
-    if profession not in PROFESSIONS.values():
+    if snake_case(profession) not in PROFESSIONS:
         PROFESSIONS[snake_case(profession)] = []
 
-    trading_name = "%s_%s_trading" % (snake_case(item_id), snake_case(profession))
+    if tag:
+        trading_name = tag_name + "_" + snake_case(profession)
+    else:
+        trading_name = snake_case(item_id) + "_" + snake_case(profession)
 
-    trading_recipe = TRADING
+    trading_recipe = copy.deepcopy(TRADING)
 
     if tag:
         trading_recipe["ingredients"][0]["tag"] = item_id
@@ -252,6 +260,7 @@ def profession_recipe(
 
     PROFESSIONS[snake_case(profession)].append(CN("trading/"+trading_name))
     info(f"Generated file mechanical_trading/{trading_name}.json")
+    sleep(0.05)
 
 
 def profession_card(
@@ -278,7 +287,7 @@ def profession_card(
         "CardColor2": "%x" % color_2
     }
 
-    stonecutting_recipe = STONECUTTING
+    stonecutting_recipe = copy.deepcopy(STONECUTTING)
 
     stonecutting_recipe["ingredient"]["item"] = CI("blank_profession_card")
     stonecutting_recipe["result"] = CI("profession_card")
@@ -288,5 +297,6 @@ def profession_card(
     with open(f"{os.path.dirname(__file__)}/Build/stonecutting/{stonecutting_name}.json", "w") as f:
         json.dump(stonecutting_recipe, f, indent=2)
 
-    info(f"Generated file stonecutting/{stonecutting_name}.json")
+    alert(f"Generated file stonecutting/{stonecutting_name}.json")
     update(f"Registered Profession Card for \"{profession}\"")
+    sleep(0.05)
